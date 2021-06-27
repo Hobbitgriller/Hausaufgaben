@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import random
 from rk4 import *
 from kuramoto import *
 from KaskadenAusfall import *
@@ -26,42 +27,51 @@ K = 50*A
 
 # Einzelner Ausfall bei festgelegter Zeit
 List = AdjAnalyse(A)
-Leitung0 = List[np.random.randint(0,List.shape[0])]
-Leitung1 = List[np.random.randint(0,List.shape[0])]
-Leitung2 = List[np.random.randint(0,List.shape[0])]
-Leitung3 = List[np.random.randint(0,List.shape[0])]
-Leitung4 = List[np.random.randint(0,List.shape[0])]
-Leitung5 = List[np.random.randint(0,List.shape[0])]
-Leitung6 = List[np.random.randint(0,List.shape[0])]
-Leitung7 = List[np.random.randint(0,List.shape[0])]
-Leitung8 = List[np.random.randint(0,List.shape[0])]
-Leitung9 = List[np.random.randint(0,List.shape[0])]
 
 
-Kneu = np.zeros(K.shape,int)
-Aneu = np.zeros(K.shape,int)
+Kneu = np.zeros(K.shape)
+Aneu = np.zeros(K.shape)
+
+Aneu = A*1
+Kneu = K*1
+
+#Variation der Kopplungsgerade
+#for i in range(K.shape[0]):
+#    for k in range(K.shape[0]):
+#        if (K[i][k] != 0):
+#           K[i][k] = random.randint(30, 70)
+
+#Entfernen
+#Aneu[51][39] = 3.
+#Aneu[39][51] = 3.
+#Kneu[51][39] = 0.
+#Kneu[39][51] = 0.
+
+Aneu[83][91] = 3.
+Aneu[91][83] = 3.
+Kneu[83][91] = 0.
+Kneu[91][83] = 0.
+
+#Aneu[90][95] = 3.
+#Aneu[95][90] = 3.
+#Kneu[90][95] = 0.
+#Kneu[95][90] = 0.
+
+#Hinzufügen
+#Aneu[59][97] = 2.
+#Aneu[97][59] = 2.
+#Kneu[59][97] = 50.
+#Kneu[97][59] = 50.
 
 
-#for j in range(K.shape[0]):
-#    for l in range(K.shape[0]):
-#        Kneu[j][l] += K[j][l]
-#Kneu[Leitung[0]][Leitung[1]] = 0
 
-#for x in range(K.shape[0]):
-#    for y in range(K.shape[0]):
-#        Aneu[j][l] += A[j][l]
-#Aneu[Leitung[0]][Leitung[1]] = 0
-        
-#Kspeicher = np.zeros(K.shape,int)
-#for a in range(K.shape[0]):
-#    for b in range(K.shape[0]):
-#        Kspeicher[a][b] += K[a][b]
+A = Aneu*1
+K = Kneu*1
 
 
-
-
-
-#np.random.seed(1234351)
+np.random.seed(1237356)
+#seed(1237356) nutzen, Synchronisation tritt auf
+#bei anderen Seeds ohne Kappen schneller
 
 omegas = np.random.normal(loc=0.2, scale=0.01, size=N)
 thetas = np.random.uniform(0, 2.*np.pi, size=N)
@@ -82,31 +92,7 @@ ax_map = plot_network(ax_map, positions, A, thetas)
 circlex = np.linspace(0, 2*np.pi, 256)
 
 
-for i in range(Nt):
-    
-    if(i == Nt/2):
-        K[Leitung0[0]][Leitung0[1]] = 0
-        K[Leitung1[0]][Leitung1[1]] = 0
-        K[Leitung2[0]][Leitung2[1]] = 0
-        K[Leitung3[0]][Leitung3[1]] = 0
-        K[Leitung4[0]][Leitung4[1]] = 0
-        K[Leitung5[0]][Leitung5[1]] = 0
-        K[Leitung6[0]][Leitung6[1]] = 0
-        K[Leitung7[0]][Leitung7[1]] = 0
-        K[Leitung8[0]][Leitung8[1]] = 0
-        K[Leitung9[0]][Leitung9[1]] = 0
-        
-        A[Leitung0[0]][Leitung0[1]] = 0
-        A[Leitung1[0]][Leitung1[1]] = 0
-        A[Leitung2[0]][Leitung2[1]] = 0
-        A[Leitung3[0]][Leitung3[1]] = 0
-        A[Leitung4[0]][Leitung4[1]] = 0
-        A[Leitung5[0]][Leitung5[1]] = 0
-        A[Leitung6[0]][Leitung6[1]] = 0
-        A[Leitung7[0]][Leitung7[1]] = 0
-        A[Leitung8[0]][Leitung8[1]] = 0
-        A[Leitung9[0]][Leitung9[1]] = 0
-        
+for i in range(Nt):        
         
     thetas = rk4_step(kuramoto, thetas, [omegas, K], h)
     xs += [thetas]
@@ -137,10 +123,8 @@ for i in range(Nt):
         # map
         ax_map = plot_network(ax_map, positions, A, thetas)
         
-        
-        
         #Mein Shit zum plotten und speichern
-        v = 10000+i
+        v = 60000+i
         fig.savefig("video"+str(v)+".png")
     
        
